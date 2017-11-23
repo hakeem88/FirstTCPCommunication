@@ -11,6 +11,8 @@ namespace FirstTCPCommunication
         static void Main(string[] args)
         {
             Server s = new Server();
+            s.AcceptClient();
+            s.StartReceive();
             Console.ReadLine();
         }
     }

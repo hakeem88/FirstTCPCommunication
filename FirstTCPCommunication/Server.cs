@@ -35,7 +35,8 @@ namespace FirstTCPCommunication
             {
                 length = clientSocket.Receive(buffer);
 
-                Console.WriteLine("Client received");
+                String data = Encoding.ASCII.GetString(buffer, 0, length);
+                Console.WriteLine(data);
             }
         }            
     }
