@@ -10,6 +10,8 @@ namespace FirstTCPCommunication
     {
         static void Main(string[] args)
         {
+            Server s = new Server();
+            Console.ReadLine();
         }
     }
 }
