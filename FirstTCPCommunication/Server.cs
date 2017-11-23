@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FirstTCPCommunication
@@ -11,33 +12,22 @@ namespace FirstTCPCommunication
     class Server
     {
         Socket serverSocket;
-        Socket clientSocket;
-        byte[] buffer = new byte[256];
-
+        List<ClientHandler> clients = new List<ClientHandler>(); // hier lege ich alles aus clienthandler ab die liste mit den daten sachen die rüber zu server soll
+  
         public Server()
         {
             serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp); //Adressfamilie IP4 oder IP6, TCP etc..
             serverSocket.Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8090)); // IP & PORT
             serverSocket.Listen(10); //Anzahl der Connections in der Queue 
+            ThreadPool.QueueUserWorkItem(AcceptClients, null); //schaut ob platz frei ist.. falls ja übergibt es die methode damit sie auch gestartet wird also das accept siehe program.cs
         }
 
-        public void AcceptClient()
+        public void AcceptClients(object o) //object o übergeben wir damit threadpool queeuserworkitem arbeiten kann weil er ein objekt brauch um die methode abzuarbeiten
         {
-            clientSocket = serverSocket.Accept();
+            while(true) { 
+            clients.Add(new ClientHandler(serverSocket.Accept()));
             Console.WriteLine("Client accepted");
-        }
-
-
-        //Methiode zum daten empfangen da client und server ready
-        public void StartReceive() {
-            int length;
-            while(true)
-            {
-                length = clientSocket.Receive(buffer);
-
-                String data = Encoding.ASCII.GetString(buffer, 0, length);
-                Console.WriteLine(data);
             }
-        }            
+        }               
     }
 }

@@ -11,8 +11,10 @@ namespace FirstTCPCommunication
         static void Main(string[] args)
         {
             Server s = new Server();
-            s.AcceptClient();
-            s.StartReceive();
+            ClientHandler ch = new ClientHandler();
+            s.AcceptClients();       // wir bleiben im serversocket.accept stecken, wenn sich einer hin verbindet kommt man nicht mehr in die methode.. multithreading => mehrere aufrufe
+            ch.SendData("Welcome");
+            ch.StartReceive();
             Console.ReadLine();
         }
     }
